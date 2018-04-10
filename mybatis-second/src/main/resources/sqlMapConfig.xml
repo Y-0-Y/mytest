@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<properties resource="db.properties">
+	</properties>
+	
+		
+	<!-- typeAliases标签：配置自定义别名 -->
+	<typeAliases>
+		<!-- 以包扫描的方式，配置自定义别名，说明：
+		 1.如果有多个pojo包需要扫描，配置多个package-->
+		<package name="cn.itcast.po"/>
+	</typeAliases>
+	
+	<!-- 运行环境配置 -->
+	<!-- default属性：指定默认使用哪一个运行环境 -->
+	<environments default="development">
+		<!-- 配置运行环境，说明：
+			id属性：给运行环境取一个唯一的名称
+		 -->
+		<environment id="development">
+			<!-- 配置事务管理器，JDBC:使用jdbc事务 -->
+			<transactionManager type="JDBC" />
+			
+			<!-- 配置数据源,说明：
+				type：指定mybatis内部提供的连接池
+			 -->
+		<!-- 	<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+				<property name="url" value="jdbc:mysql://127.0.0.1:3306/75_mybati" />
+				<property name="username" value="root" />
+				<property name="password" value="root" />
+			</dataSource> -->
+			<dataSource type="POOLED">
+				<property name="driver" value="${db.driver}" />
+				<property name="url" value="${db.url}" />
+				<property name="username" value="${db.username}" />
+				<property name="password" value="${db.password}" />
+			</dataSource>
+			
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="sqlmap/User.xml"/>
+		<mapper resource="sqlmap/UserMapper.xml"/>
+		<mapper resource="sqlmap/OrdersMapper.xml"/>
+	</mappers>
+	<!-- 加载属性文件和定义属性 ,说明：
+		1.resource：指定本地的配置文件位置
+		2.url：指定网络上的配置文件位置（http://127.0.0.1:8080/db.properties）
+	-->
+
+	
+	
+</configuration>

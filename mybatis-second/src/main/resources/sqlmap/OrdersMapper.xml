@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace:名称空间，相当于java中的package，用户放置sql语句名称的冲突（sql语句隔离） -->
+<!-- mapper代理开发方法中，namespace属性值，必须是mapper代理接口的全限定名称 -->
+<mapper namespace="cn.itcast.mapper.OrdersMapper">
+	
+	
+	<resultMap type="orders" id="ordersUserResultMap">
+		<id property="id" column="id"/>
+		<!-- 配置订单的普通字段对应关系 -->
+		<result property="userId" column="user_id"/>
+		<result property="number" column="number"/>
+		<result property="createtime" column="createtime"/>
+		<result property="note" column="note"/>
+		
+		
+		<!-- 配置一对一关联关系，说明：
+			association标签：配置一对一关联关系
+			property：要映射的属性名称
+			javaType：要映射的属性类型（必须要指定）
+		 -->
+		  <association property="user" javaType="User">
+		  		<!-- 配置用户的主键对应关系 -->
+		  		<id property="id" column="user_id"/>
+		  		
+		  		<!-- 配置用户普通字段对应关系 -->
+		  		<result property="username" column="username"/>
+		  		<result property="address" column="address"/>
+		  </association>
+		
+	
+	</resultMap>
+	
+	
+	
+	
+	<!-- 提取公共的订单查询字段列表,说明：
+		id：唯一标识的名称，通过id引用该sql片段
+	 -->
+	<sql id="select_orders_list">
+		o.id,o.user_id,o.number,o.createtime,o.note
+	</sql>
+	
+	<!-- 查询全部订单数据 -->
+	<select id="queryAllOrders" resultType="orders">
+		select <include refid="select_orders_list"></include> from orders o
+	</select>
+	
+		<!--查询订单数据，并且关联查询出所属的用户数据  -->
+	<select id="queryOrdersAndUsers" resultMap="ordersUserResultMap" >
+		SELECT
+		o.id,
+		o.user_id,
+		o.number,
+		o.createtime,
+		o.note,
+		u.username,
+		u.address
+	FROM
+		orders o
+	LEFT JOIN `user` u ON o.user_id = u.id
+		</select>
+	
+	
+	
+	
+</mapper>

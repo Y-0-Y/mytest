@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace:名称空间，相当于java中的package，用户放置sql语句名称的冲突（sql语句隔离） -->
+<!-- mapper代理开发方法中，namespace属性值，必须是mapper代理接口的全限定名称 -->
+<mapper namespace="cn.itcast.mapper.UserMapper">
+
+	<!-- 根据用户id查询用户，说明：
+ 		select标签：用于放置查询的sql语句
+ 		id：给sql语句取一个唯一的名称
+ 		parameterType：指定输入参数的类型
+ 		resultType：指定返回值的类型（暂时需要注意使用类的全限定名称）
+ 		#{id}：占位符，相当于jdbc中的问号
+ 	 -->
+ 	<select id="queryUserById" parameterType="int" resultType="cn.itcast.po.User">
+ 		select * from `user` where id=#{id}
+ 	</select>
+ 	
+ 	<!-- 新增一个用户，说明：
+ 		insert标签：用于放置新增的sql语句
+ 		#{id}：站位符，当参数传递的是pojo的时候，花括号中的内容是pojo的属性
+ 	 -->
+ 	 <insert id="insertUser" parameterType="cn.itcast.po.User"
+ 	 	useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+ 	 	
+ 	 	insert into `user`(username,birthday,sex,address) 
+ 	 	values(#{username},#{birthday},#{sex},#{address})
+ 	 </insert>
+	
+	<!-- 批量新增用户 -->
+ 	 <insert id="batchInsertUsers" parameterType="list">
+ 	 	insert into `user`(username,birthday,sex,address) 
+ 	 	values
+	 	 	<!-- foreach标签：循环处理参数集合
+ 	 		collection：参数集合，这里是list
+ 	 		item：当前循环的对象引用
+ 	 		separator：指定分割符
+ 	 	 -->
+ 	 	<foreach collection="list" item="u" separator=",">
+ 	 		(#{u.username},#{u.birthday},#{u.sex},#{u.address})
+ 	 	</foreach>
+ 	 	<!-- ('用户1','2018-03-27','1','地址1'),('用户2','2018-03-27','1','地址2') -->
+ 	 </insert>
+	
+	
+</mapper>
